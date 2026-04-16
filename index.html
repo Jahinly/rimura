@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rimura | The Ultimate Discord Bot</title>
+    
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw">
+    
+    <!-- FontAwesome & Google Fonts (Inter for that premium modern look) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           CORE THEME VARIABLES (Rimura Dark Purple)
+           ========================================= */
+        :root {
+            --bg: #0B0612;               /* Deepest purple/black */
+            --bg-nav: rgba(11, 6, 18, 0.7);
+            --card: #140A20;             /* Card background */
+            --card-hover: #1A0D2A;
+            --border: #2B1644;           /* Subtle purple border */
+            --border-glow: #402266;
+            --primary: #A855F7;          /* Vibrant purple */
+            --primary-hover: #C084FC;
+            --text-main: #F8FAFC;        /* Crisp white text */
+            --text-muted: #94A3B8;       /* Grayish text */
+            --discord: #5865F2;
+            --discord-dark: #2B2D31;
+            --font: 'Inter', sans-serif;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: var(--font); scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at top center, rgba(168,85,247,0.1) 0%, transparent 60%);
+        }
+
+        /* --- SPA VIEW LOGIC --- */
+        .page-view {
+            display: none; opacity: 0; animation: fadeIn 0.4s ease forwards;
+        }
+        .page-view.active { display: block; }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* =========================================
+           NAVIGATION BAR
+           ========================================= */
+        nav {
+            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 8%; background: var(--bg-nav);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo-container {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 22px; font-weight: 700; color: var(--text-main);
+            text-decoration: none; letter-spacing: -0.5px; cursor: pointer;
+        }
+        .logo-container img { width: 40px; height: 40px; border-radius: 50%; }
+
+        .nav-links { display: flex; gap: 32px; align-items: center; }
+        .nav-links a {
+            text-decoration: none; color: var(--text-muted);
+            font-weight: 500; font-size: 0.95rem; transition: var(--transition);
+            cursor: pointer;
+        }
+        .nav-links a:hover { color: var(--text-main); }
+
+        .nav-buttons { display: flex; gap: 16px; align-items: center; }
+        
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 20px; border-radius: 12px; font-weight: 600;
+            font-size: 0.95rem; text-decoration: none; transition: var(--transition);
+            cursor: pointer; border: 1px solid transparent;
+        }
+        .btn-white {
+            background: var(--text-main); color: var(--bg);
+        }
+        .btn-white:hover { background: #e2e8f0; transform: translateY(-2px); }
+        .btn-outline {
+            background: transparent; color: var(--text-main);
+            border-color: var(--border);
+        }
+        .btn-outline:hover { background: var(--card); border-color: var(--border-glow); }
+
+        /* =========================================
+           HERO SECTION
+           ========================================= */
+        .hero {
+            padding: 120px 8% 60px; text-align: center;
+            max-width: 1000px; margin: 0 auto;
+        }
+        .badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.2); border-radius: 99px;
+            color: var(--primary); font-size: 0.9rem; font-weight: 600;
+            margin-bottom: 24px;
+        }
+        .hero h1 {
+            font-size: 4.5rem; font-weight: 800; line-height: 1.1;
+            letter-spacing: -2px; margin-bottom: 24px;
+        }
+        .hero p {
+            font-size: 1.25rem; color: var(--text-muted);
+            line-height: 1.6; margin-bottom: 40px; max-width: 700px;
+            margin-left: auto; margin-right: auto;
+        }
+        .hero-buttons .btn { padding: 14px 28px; font-size: 1.1rem; }
+
+        /* =========================================
+           SERVER MARQUEE (Lookalike Slider)
+           ========================================= */
+        .marquee-container {
+            width: 100%; overflow: hidden; padding: 40px 0;
+            mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+        }
+        .marquee-content {
+            display: flex; gap: 20px; white-space: nowrap;
+            animation: scroll 25s linear infinite; width: max-content;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .server-pill {
+            display: inline-flex; align-items: center; gap: 12px;
+            background: var(--card); border: 1px solid var(--border);
+            padding: 12px 24px; border-radius: 100px;
+        }
+        .server-pill .s-icon {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: var(--primary); display: flex; align-items: center;
+            justify-content: center; font-size: 12px; font-weight: 700;
+        }
+        .server-pill .s-name { font-weight: 600; color: var(--text-main); }
+        .server-pill .s-count { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* =========================================
+           SECTION HEADERS & CONTAINERS
+           ========================================= */
+        .section { padding: 80px 8%; max-width: 1400px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 16px; letter-spacing: -1px;}
+        .section-header p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+        /* =========================================
+           BENTO GRID (Why Choose Rimura?)
+           ========================================= */
+        .bento-grid {
+            display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px;
+        }
+        .bento-card {
+            background: linear-gradient(180deg, var(--card) 0%, rgba(20,10,32,0.6) 100%);
+            border: 1px solid var(--border); border-radius: 24px;
+            padding: 32px; overflow: hidden; position: relative;
+            transition: var(--transition);
+        }
+        .bento-card:hover { border-color: var(--border-glow); transform: translateY(-4px); }
+        
+        .bento-card.music { grid-column: span 8; min-height: 300px; display: flex; justify-content: space-between; align-items: center; }
+        .bento-card.mod { grid-column: span 4; }
+        .bento-card.level { grid-column: span 4; }
+        .bento-card.analytics { grid-column: span 4; }
+        .bento-card.hub { grid-column: span 4; }
+
+        .bento-card h3 { font-size: 1.5rem; margin-bottom: 12px; }
+        .bento-card p { color: var(--text-muted); line-height: 1.6; }
+        
+        /* Music Mockup inside Bento */
+        .music-mockup {
+            background: #000; border: 1px solid var(--border); border-radius: 16px;
+            padding: 16px; width: 250px; text-align: left;
+        }
+        .m-art { width: 100%; height: 120px; border-radius: 8px; background: linear-gradient(45deg, #A855F7, #ec4899); margin-bottom: 12px; }
+        .m-title { font-weight: 600; font-size: 0.95rem; }
+        .m-artist { color: var(--text-muted); font-size: 0.8rem; margin-bottom: 12px; }
+        .m-bar { width: 100%; height: 4px; background: #333; border-radius: 2px; margin-bottom: 12px; }
+        .m-bar span { display: block; width: 40%; height: 100%; background: var(--text-main); border-radius: 2px; }
+        .m-controls { display: flex; justify-content: center; gap: 16px; color: var(--text-main); }
+
+        /* =========================================
+           FEATURES LIST GRID (Economy, XP, etc.)
+           ========================================= */
+        .features-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px;
+        }
+        .feature-item {
+            padding: 30px; background: var(--card); border: 1px solid var(--border);
+            border-radius: 20px;
+        }
+        .feature-item i { font-size: 2rem; color: var(--primary); margin-bottom: 20px; }
+        .feature-item h3 { font-size: 1.3rem; margin-bottom: 12px; }
+        .feature-item p { color: var(--text-muted); margin-bottom: 20px; font-size: 0.95rem; line-height: 1.5;}
+        
+        .feature-sub { display: flex; flex-direction: column; gap: 12px; }
+        .f-sub-item { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
+        .f-sub-item i { font-size: 1rem; color: var(--text-main); margin: 0; }
+        .f-sub-item span { color: var(--text-muted); }
+
+        /* =========================================
+           STATS & METRICS
+           ========================================= */
+        .metrics-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+            margin-top: 40px;
+        }
+        .metric-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 40px 20px; text-align: center;
+        }
+        .metric-card h3 { font-size: 2.5rem; color: var(--primary); font-weight: 800; margin-bottom: 8px; }
+        .metric-card h4 { font-size: 1.1rem; margin-bottom: 8px; }
+        .metric-card p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* =========================================
+           ADVANCED INTELLIGENCE (Discord Logs Mockup)
+           ========================================= */
+        .logs-container {
+            display: flex; gap: 40px; align-items: center;
+        }
+        .logs-text { flex: 1; }
+        .logs-text h2 { font-size: 2.5rem; margin-bottom: 20px; letter-spacing: -1px; }
+        .logs-text p { color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; }
+        
+        .discord-mockup {
+            flex: 1; background: var(--discord-dark); border-radius: 16px;
+            padding: 24px; border: 1px solid rgba(255,255,255,0.05);
+            font-family: 'gg sans', 'Helvetica Neue', sans-serif;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+        }
+        .d-msg { display: flex; gap: 16px; margin-bottom: 20px; }
+        .d-avatar { width: 40px; height: 40px; border-radius: 50%; }
+        .d-header { margin-bottom: 6px; }
+        .d-name { color: #fff; font-weight: 600; font-size: 1rem; }
+        .d-bot { background: var(--discord); color: #fff; font-size: 0.65rem; padding: 2px 4px; border-radius: 3px; margin-left: 6px; }
+        .d-time { color: #949BA4; font-size: 0.75rem; margin-left: 6px; }
+        
+        .d-embed {
+            background: #1E1F22; border-left: 4px solid var(--primary);
+            border-radius: 4px; padding: 16px; margin-top: 4px;
+        }
+        .d-embed-title { color: #fff; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .d-embed-title.red i { color: #ED4245; }
+        .d-embed-title.green i { color: #57F287; }
+        .d-embed-desc { color: #DBDEE1; font-size: 0.85rem; line-height: 1.4; }
+
+        /* =========================================
+           REVIEWS (Masonry look)
+           ========================================= */
+        .reviews-grid {
+            column-count: 3; column-gap: 20px; margin-top: 40px;
+        }
+        .review-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 30px; margin-bottom: 20px;
+            break-inside: avoid;
+        }
+        .review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+        .review-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700;}
+        .review-name { font-weight: 600; color: var(--text-main); }
+        .review-role { color: var(--text-muted); font-size: 0.85rem; }
+        .review-text { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; font-style: italic; }
+
+        /* =========================================
+           TOTAL SERVERS BANNER & CTA
+           ========================================= */
+        .stats-banner {
+            display: flex; justify-content: center; gap: 80px;
+            padding: 60px 8%; border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border); background: var(--card);
+            text-align: center;
+        }
+        .stat-item h3 { font-size: 2.5rem; font-weight: 800; margin-bottom: 4px; }
+        .stat-item p { color: var(--text-muted); font-weight: 500; }
+
+        .cta-section { padding: 100px 8%; text-align: center; }
+        .cta-section h2 { font-size: 3rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 20px; }
+        .cta-section p { color: var(--text-muted); font-size: 1.2rem; margin-bottom: 40px; }
+
+        /* =========================================
+           FOOTER
+           ========================================= */
+        footer {
+            border-top: 1px solid var(--border); padding: 60px 8% 40px;
+        }
+        .footer-grid {
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+            margin-bottom: 60px;
+        }
+        .f-brand h3 { display: flex; align-items: center; gap: 12px; font-size: 1.5rem; margin-bottom: 16px; }
+        .f-brand img { width: 32px; border-radius: 50%; }
+        .f-brand p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; max-width: 300px; }
+        .f-links h4 { margin-bottom: 20px; font-weight: 600; }
+        .f-links ul { list-style: none; }
+        .f-links ul li { margin-bottom: 12px; }
+        .f-links ul a { color: var(--text-muted); text-decoration: none; font-size: 0.95rem; transition: var(--transition); cursor: pointer;}
+        .f-links ul a:hover { color: var(--primary); }
+        .footer-bottom {
+            text-align: center; color: var(--text-muted); font-size: 0.9rem;
+            padding-top: 20px; border-top: 1px solid var(--border);
+        }
+
+        /* =========================================
+           AUTH PAGE (Discord Login)
+           ========================================= */
+        .auth-wrapper {
+            min-height: 80vh; display: flex; justify-content: center; align-items: center;
+            padding: 40px 20px;
+        }
+        .auth-card {
+            background: linear-gradient(180deg, var(--card) 0%, rgba(20,10,32,0.8) 100%);
+            border: 1px solid var(--border); border-radius: 24px;
+            padding: 50px 40px; width: 100%; max-width: 450px; text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .auth-card img { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 24px; box-shadow: 0 0 20px rgba(168,85,247,0.3); }
+        .auth-card h2 { font-size: 2rem; margin-bottom: 12px; letter-spacing: -0.5px; }
+        .auth-card p { color: var(--text-muted); margin-bottom: 32px; line-height: 1.5; }
+        
+        .btn-discord {
+            background: var(--discord); color: #fff; width: 100%;
+            padding: 16px; border-radius: 12px; font-size: 1.1rem;
+            font-weight: 600; text-decoration: none; display: flex;
+            align-items: center; justify-content: center; gap: 12px;
+            transition: var(--transition); border: none; cursor: pointer;
+        }
+        .btn-discord:hover { background: #4752C4; transform: translateY(-3px); box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4); }
+        
+        /* TOAST */
+        #toast {
+            position: fixed; bottom: -100px; right: 20px; background: var(--text-main);
+            color: var(--bg); padding: 16px 24px; border-radius: 12px; font-weight: 600;
+            display: flex; align-items: center; gap: 12px; z-index: 9999;
+            transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        #toast.show { bottom: 30px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .bento-card.music, .bento-card.mod, .bento-card.level, .bento-card.analytics, .bento-card.hub { grid-column: span 12; }
+            .features-grid, .metrics-grid, .reviews-grid { grid-template-columns: repeat(2, 1fr); column-count: 2; }
+            .logs-container { flex-direction: column; }
+        }
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 3rem; }
+            .features-grid, .metrics-grid, .reviews-grid, .footer-grid { grid-template-columns: 1fr; column-count: 1; }
+            .stats-banner { flex-direction: column; gap: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav>
+        <a onclick="navigate('home')" class="logo-container">
+            <img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" alt="Rimura Logo">
+            Rimura
+        </a>
+        <div class="nav-links">
+            <a onclick="navigate('home')">Commands</a>
+            <a onclick="navigate('home')">Embeds</a>
+            <a onclick="navigate('home')">Premium</a>
+            <a onclick="navigate('home')">Status</a>
+        </div>
+        <div class="nav-buttons">
+            <a href="#" class="btn btn-outline">Add to Discord</a>
+            <a onclick="navigate('login')" class="btn btn-white">Login</a>
+        </div>
+    </nav>
+
+    <!-- TOAST ALERT -->
+    <div id="toast">
+        <i class="fa-solid fa-circle-notch fa-spin"></i>
+        <span id="toast-msg">Connecting...</span>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- VIEW: HOME PAGE -->
+    <!-- ============================================== -->
+    <main id="view-home" class="page-view active">
+        
+        <!-- HERO -->
+        <section class="hero">
+            <div class="badge"><i class="fa-solid fa-shield-check"></i> Trusted by 12,500+ communities</div>
+            <h1>Bring your community to life with Rimura</h1>
+            <p>The all-in-one Discord bot designed to supercharge your server. Advanced moderation, robust security, and engaging utility commands — all at your fingertips.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-white">Add to Discord</a>
+                <a href="#" class="btn btn-outline">View Commands</a>
+            </div>
+        </section>
+
+        <!-- SERVER MARQUEE -->
+        <div class="marquee-container">
+            <!-- Duplicated content for infinite scroll effect -->
+            <div class="marquee-content">
+                <div class="server-pill"><div class="s-icon">L</div><span class="s-name">LUNIVARO XMAS</span><span class="s-count">22,335 members</span></div>
+                <div class="server-pill"><div class="s-icon">C</div><span class="s-name">Card Wars Kingdom</span><span class="s-count">18,992 members</span></div>
+                <div class="server-pill"><div class="s-icon">B</div><span class="s-name">BeyondTheBanters</span><span class="s-count">16,195 members</span></div>
+                <div class="server-pill"><div class="s-icon">E</div><span class="s-name">enanan nation</span><span class="s-count">11,667 members</span></div>
+                <div class="server-pill"><div class="s-icon">H</div><span class="s-name">HotCafe | $</span><span class="s-count">178,774 members</span></div>
+                <!-- Duplicate -->
+                <div class="server-pill"><div class="s-icon">L</div><span class="s-name">LUNIVARO XMAS</span><span class="s-count">22,335 members</span></div>
+                <div class="server-pill"><div class="s-icon">C</div><span class="s-name">Card Wars Kingdom</span><span class="s-count">18,992 members</span></div>
+                <div class="server-pill"><div class="s-icon">B</div><span class="s-name">BeyondTheBanters</span><span class="s-count">16,195 members</span></div>
+                <div class="server-pill"><div class="s-icon">E</div><span class="s-name">enanan nation</span><span class="s-count">11,667 members</span></div>
+                <div class="server-pill"><div class="s-icon">H</div><span class="s-name">HotCafe | $</span><span class="s-count">178,774 members</span></div>
+            </div>
+        </div>
+
+        <!-- WHY CHOOSE (BENTO GRID) -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Why Choose Rimura?</h2>
+                <p>A powerful Discord bot that combines aesthetics with functionality, providing everything you need to create an engaging community.</p>
+            </div>
+            
+            <div class="bento-grid">
+                <!-- Music Card -->
+                <div class="bento-card music">
+                    <div>
+                        <h3>Music Player</h3>
+                        <p style="max-width: 250px;">High-quality music playback with advanced controls, queues, and voice features.</p>
+                    </div>
+                    <div class="music-mockup">
+                        <div class="m-art"></div>
+                        <div class="m-title">Back to Me</div>
+                        <div class="m-artist">The Marias</div>
+                        <div class="m-bar"><span></span></div>
+                        <div class="m-controls">
+                            <i class="fa-solid fa-backward-step"></i>
+                            <i class="fa-solid fa-pause"></i>
+                            <i class="fa-solid fa-forward-step"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Small Cards -->
+                <div class="bento-card mod">
+                    <i class="fa-solid fa-shield-halved" style="font-size: 2rem; color: var(--primary); margin-bottom: 16px;"></i>
+                    <h3>Advanced Moderation</h3>
+                    <p>Keep your server safe with powerful moderation tools, auto-mod, and raid protection.</p>
+                </div>
+                <div class="bento-card level">
+                    <i class="fa-solid fa-star" style="font-size: 2rem; color: var(--primary); margin-bottom: 16px;"></i>
+                    <h3>Level System</h3>
+                    <p>Reward active members with custom roles and perks. Members earn XP through chat activity.</p>
+                </div>
+                <div class="bento-card analytics">
+                    <i class="fa-solid fa-chart-line" style="font-size: 2rem; color: var(--primary); margin-bottom: 16px;"></i>
+                    <h3>Server Analytics</h3>
+                    <p>Track your server's growth and engagement. Monitor member activity over time.</p>
+                </div>
+                <div class="bento-card hub">
+                    <i class="fa-solid fa-users" style="font-size: 2rem; color: var(--primary); margin-bottom: 16px;"></i>
+                    <h3>Community Hub</h3>
+                    <p>Create a welcoming space with custom welcome messages and role assignment.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- POWERFUL FEATURES -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Powerful Features, Simple Interface</h2>
+                <p>Every feature is designed to be powerful yet intuitive, helping you manage your community with ease.</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fa-solid fa-coins"></i>
+                    <h3>Economy System</h3>
+                    <p>Advanced economy with custom shops, trading, gambling, and item management.</p>
+                    <div class="feature-sub">
+                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Custom Currency</span></div>
+                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Real-time Trading</span></div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-bolt"></i>
+                    <h3>XP & Leveling</h3>
+                    <p>Dynamic level system with custom rewards, roles, and progression paths.</p>
+                    <div class="feature-sub">
+                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Auto Roles</span></div>
+                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Custom XP Rules</span></div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-music"></i>
+                    <h3>Music & Voice</h3>
+                    <p>High-quality music playback with advanced controls and voice features.</p>
+                    <div class="feature-sub">
+                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Multiple Sources</span></div>
+                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Audio Effects</span></div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-gavel"></i>
+                    <h3>Advanced Moderation</h3>
+                    <p>Comprehensive moderation tools with auto-mod, raid protection, and filters.</p>
+                    <div class="feature-sub">
+                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Anti-Raid</span></div>
+                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Auto-Mod</span></div>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <h3>Logs & Analytics</h3>
+                    <p>Detailed server activity tracking and analytics dashboard.</p>
+                    <div class="feature-sub">
+                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Activity Insights</span></div>
+                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Growth Metrics</span></div>
+                    </div>
+                </div>
+                <!-- Empty div to balance grid -->
+                <div class="feature-item" style="border: none; background: transparent;"></div>
+            </div>
+        </section>
+
+        <!-- STANDARDS METRICS -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Setting New Standards</h2>
+                <p>Experience industry-leading performance and reliability that sets us apart from the competition.</p>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h3>19ms</h3>
+                    <h4>Fastest Response</h4>
+                    <p>While others take 200ms+, we deliver at lightning speed.</p>
+                </div>
+                <div class="metric-card">
+                    <h3>99.9%</h3>
+                    <h4>Highest Uptime</h4>
+                    <p>Enterprise-grade reliability you can count on.</p>
+                </div>
+                <div class="metric-card">
+                    <h3>98.9K+</h3>
+                    <h4>Daily Commands</h4>
+                    <p>Trusted by millions for reliable performance.</p>
+                </div>
+                <div class="metric-card">
+                    <h3>100%</h3>
+                    <h4>Security Coverage</h4>
+                    <p>Complete protection with anti-raid and spam detection.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- LOGS MOCKUP -->
+        <section class="section">
+            <div class="logs-container">
+                <div class="logs-text">
+                    <h2>Advanced Server Intelligence</h2>
+                    <p>Comprehensive monitoring and logging system that keeps you in control of every aspect of your community. Track member activity, server changes, and moderation actions in real-time.</p>
+                </div>
+                <div class="discord-mockup">
+                    <div class="d-msg">
+                        <img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" class="d-avatar">
+                        <div>
+                            <div class="d-header">
+                                <span class="d-name">Rimura</span><span class="d-bot">BOT</span><span class="d-time">Today at 8:36 PM</span>
+                            </div>
+                            <div class="d-embed">
+                                <div class="d-embed-title red"><i class="fa-solid fa-arrow-right-from-bracket"></i> Member Left</div>
+                                <div class="d-embed-desc">
+                                    <strong>Joined Server</strong><br>
+                                    Tuesday, 6 May 2025 7:02 AM (2 months ago)<br>
+                                    Member ID: 414983717517981876
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-msg">
+                        <img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" class="d-avatar">
+                        <div>
+                            <div class="d-header">
+                                <span class="d-name">Rimura</span><span class="d-bot">BOT</span><span class="d-time">Today at 8:41 PM</span>
+                            </div>
+                            <div class="d-embed">
+                                <div class="d-embed-title green"><i class="fa-solid fa-arrow-right-to-bracket"></i> Member Joined</div>
+                                <div class="d-embed-desc">
+                                    <strong>Account Created</strong><br>
+                                    Tuesday, 21 January 2020 4:40 AM (5 years ago)<br>
+                                    Member ID: 668781824829165574
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- REVIEWS -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Trusted by Thousands of Communities</h2>
+                <p>Join the growing community of server owners who trust Rimura to manage and protect their Discord servers.</p>
+            </div>
+            
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">S</div>
+                        <div>
+                            <div class="review-name">Sam</div>
+                            <div class="review-role">Server Owner</div>
+                        </div>
+                    </div>
+                    <div class="review-text">"Rimura is truly unlike any other bot. With Rimura my life has become so much easier without a constant hassle of dealing with manual moderation, and removed the constant worry of betrayal with their antinuke system; moreover everything is packed in nicely with their modern dashboard. This bot is the future."</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">N</div>
+                        <div>
+                            <div class="review-name">nxyy</div>
+                            <div class="review-role">Community Manager</div>
+                        </div>
+                    </div>
+                    <div class="review-text">"We tried several premium bots before finding Rimura. Nothing else comes close to the feature set and reliability."</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">E</div>
+                        <div>
+                            <div class="review-name">endure</div>
+                            <div class="review-role">Server Owner • 25k members</div>
+                        </div>
+                    </div>
+                    <div class="review-text">"Rimura has been a game changer for our server. The automation features and moderation tools have made managing our community so much easier. The premium features are worth every penny."</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">K</div>
+                        <div>
+                            <div class="review-name">kei</div>
+                            <div class="review-role">Server Owner</div>
+                        </div>
+                    </div>
+                    <div class="review-text">"I have had many many experiences with other discord bots, however none of them come close to the experience I've had with Rimura. It is an elite, easy to use, and aesthetic discord bot."</div>
+                </div>
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">N</div>
+                        <div>
+                            <div class="review-name">novelkars</div>
+                            <div class="review-role">Server Admin</div>
+                        </div>
+                    </div>
+                    <div class="review-text">"I've recommended Rimura to everyone I know. The premium features are absolutely worth it."</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS BANNER -->
+        <div class="stats-banner">
+            <div class="stat-item">
+                <h3>7,698</h3>
+                <p>Active Servers</p>
+            </div>
+            <div class="stat-item">
+                <h3>3.2M+</h3>
+                <p>Total Users</p>
+            </div>
+            <div class="stat-item">
+                <h3>1.2M+</h3>
+                <p>Daily Commands</p>
+            </div>
+        </div>
+
+        <!-- BOTTOM CTA -->
+        <section class="cta-section">
+            <h2>Ready to Transform Your Server?</h2>
+            <p>Join thousands of servers already using Rimura to create engaging, well-managed communities. Get started in seconds.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-white">Add to Discord</a>
+                <a href="#" class="btn btn-outline">View Commands</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- ============================================== -->
+    <!-- VIEW: DISCORD LOGIN -->
+    <!-- ============================================== -->
+    <main id="view-login" class="page-view">
+        <div class="auth-wrapper">
+            <div class="auth-card">
+                <img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" alt="Rimura Logo">
+                <h2>Welcome Back</h2>
+                <p>Log in with your Discord account to access the dashboard, manage your servers, and configure modules.</p>
+                
+                <!-- Discord OAuth Button -->
+                <button id="discord-login-btn" class="btn-discord">
+                    <i class="fa-brands fa-discord"></i> Login with Discord
+                </button>
+                
+                <p style="margin-top: 24px; font-size: 0.85rem; opacity: 0.6;">
+                    By logging in, you agree to our Terms of Service and Privacy Policy.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================== -->
+    <!-- FOOTER -->
+    <!-- ============================================== -->
+    <footer>
+        <div class="footer-grid">
+            <div class="f-brand">
+                <h3><img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" alt="Rimura"> Rimura</h3>
+                <p>The ultimate Discord bot for moderation, security, and utility. Powering thousands of communities.</p>
+            </div>
+            <div class="f-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a onclick="navigate('home')">Commands</a></li>
+                    <li><a onclick="navigate('home')">Premium</a></li>
+                    <li><a onclick="navigate('home')">Embed Builder</a></li>
+                    <li><a onclick="navigate('home')">Status</a></li>
+                </ul>
+            </div>
+            <div class="f-links">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Add to Discord</a></li>
+                    <li><a href="#">Support Server</a></li>
+                </ul>
+            </div>
+            <div class="f-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Rimura. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- ============================================== -->
+    <!-- JAVASCRIPT LOGIC -->
+    <!-- ============================================== -->
+    <script>
+        // --- 1. SPA ROUTING LOGIC ---
+        function navigate(viewId) {
+            // Update URL Hash without jumping instantly
+            window.history.pushState(null, null, '#' + viewId);
+            
+            // Hide all pages
+            document.querySelectorAll('.page-view').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show target page
+            const targetPage = document.getElementById('view-' + viewId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            } else {
+                document.getElementById('view-home').classList.add('active');
+            }
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', () => {
+            let hash = window.location.hash.substring(1) || 'home';
+            navigate(hash);
+        });
+
+        // Initialize view on load
+        window.addEventListener('load', () => {
+            let hash = window.location.hash.substring(1) || 'home';
+            navigate(hash);
+        });
+
+        // --- 2. TOAST NOTIFICATION LOGIC ---
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const msg = document.getElementById('toast-msg');
+            msg.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // --- 3. DISCORD OAUTH LOGIC ---
+        // REPLACE "YOUR_CLIENT_ID_HERE" with your actual Application Client ID from the Discord Developer Portal
+        const DISCORD_CLIENT_ID = "YOUR_CLIENT_ID_HERE"; 
+        
+        // This will automatically grab whatever domain you are hosting this website on
+        const REDIRECT_URI = encodeURIComponent(window.location.origin + window.location.pathname); 
+        
+        const DISCORD_LOGIN_URL = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=identify%20guilds`;
+
+        document.getElementById('discord-login-btn').addEventListener('click', () => {
+            if (DISCORD_CLIENT_ID === "YOUR_CLIENT_ID_HERE") {
+                showToast("Error: Discord Client ID is not configured in the code.");
+            } else {
+                showToast("Redirecting to Discord Secure Login...");
+                setTimeout(() => {
+                    window.location.href = DISCORD_LOGIN_URL;
+                }, 800);
+            }
+        });
+    </script>
+</body>
+</html>
