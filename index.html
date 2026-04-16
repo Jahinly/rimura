@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rimura | The Ultimate Multi-Purpose Bot</title>
+    
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables for Enhanced Light Purple Theme */
+        :root {
+            --bg-color: #f5effc;         /* Very light lavender background */
+            --glass-bg: rgba(255, 255, 255, 0.6); /* Frosted glass */
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --primary-light: #d8b4fe;    /* Soft purple */
+            --primary-main: #a855f7;     /* Main vibrant purple */
+            --primary-dark: #7e22ce;     /* Deep purple */
+            --text-main: #2e1065;        /* Very dark purple for readability */
+            --text-muted: #6b21a8;       /* Muted purple text */
+            --discord-dark: #313338;     /* Discord background color */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(216, 180, 254, 0.4) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.2) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* --- LOADING SCREEN --- */
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        #loader img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            animation: bounceIn 1.5s infinite alternate;
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.4);
+        }
+
+        #loader h2 {
+            margin-top: 20px;
+            color: var(--primary-dark);
+            font-weight: 700;
+            font-size: 2rem;
+            letter-spacing: 2px;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: translateY(0) scale(0.95); box-shadow: 0 5px 15px rgba(168, 85, 247, 0.2); }
+            100% { transform: translateY(-15px) scale(1.05); box-shadow: 0 25px 40px rgba(168, 85, 247, 0.5); }
+        }
+
+        .loader-hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* --- NAVBAR (GLASSMORPHISM) --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 8%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--primary-dark);
+        }
+
+        .logo-container img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-main);
+            margin-left: 35px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-main);
+        }
+
+        .btn-nav {
+            background: linear-gradient(135deg, var(--primary-main), var(--primary-dark));
+            color: white !important;
+            padding: 12px 28px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+
+        .btn-nav:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.5);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 120px 10%;
+            min-height: 80vh;
+        }
+
+        .hero-content {
+            max-width: 55%;
+        }
+
+        .tagline {
+            display: inline-block;
+            background: rgba(168, 85, 247, 0.15);
+            color: var(--primary-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            line-height: 1.1;
+            font-weight: 800;
+        }
+
+        .hero-content h1 span {
+            background: linear-gradient(135deg, var(--primary-main), #d946ef);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 16px 35px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-main), var(--primary-dark));
+            color: white;
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(168, 85, 247, 0.6);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--primary-dark);
+            border: 2px solid var(--primary-light);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-light);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .hero-img {
+            position: relative;
+        }
+
+        .hero-img img {
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 0 60px rgba(168, 85, 247, 0.4);
+            animation: float 6s ease-in-out infinite;
+            border: 8px solid rgba(255, 255, 255, 0.6);
+        }
+
+        /* --- STATS SECTION --- */
+        .stats {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-main));
+            padding: 40px 10%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            color: white;
+            flex-wrap: wrap;
+            gap: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            font-weight: 500;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- DISCORD PREVIEW SECTION --- */
+        .preview-section {
+            padding: 100px 10%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+        }
+
+        .preview-text {
+            flex: 1;
+        }
+
+        .preview-text h2 {
+            font-size: 3rem;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .preview-text p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+
+        .discord-mockup {
+            flex: 1;
+            background-color: var(--discord-dark);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            color: #dbdee1;
+            font-family: 'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .discord-msg {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .discord-msg img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .discord-content .username {
+            font-weight: 600;
+            color: white;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .bot-tag {
+            background-color: #5865F2;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 5px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .discord-content .time {
+            font-size: 0.75rem;
+            color: #949ba4;
+            font-weight: 400;
+        }
+
+        .discord-embed {
+            background-color: #2b2d31;
+            border-left: 4px solid var(--primary-main);
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        .embed-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .embed-desc {
+            font-size: 0.9rem;
+            color: #dbdee1;
+            line-height: 1.4;
+        }
+
+        /* --- FEATURES SECTION --- */
+        .features {
+            padding: 100px 10%;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            margin-bottom: 60px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 35px;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            padding: 40px 30px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px rgba(168, 85, 247, 0.05);
+            transition: all 0.4s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-main), var(--primary-light));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.15);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(168, 85, 247, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon i {
+            font-size: 1.8rem;
+            color: var(--primary-main);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* --- CTA SECTION --- */
+        .cta-section {
+            padding: 100px 10%;
+            text-align: center;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-main));
+            padding: 60px 40px;
+            border-radius: 30px;
+            color: white;
+            box-shadow: 0 20px 50px rgba(168, 85, 247, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .cta-box p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--primary-dark);
+            padding: 15px 40px;
+            border-radius: 30px;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-white:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--text-main);
+            color: white;
+            padding: 60px 10% 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-brand img {
+            width: 40px;
+            border-radius: 50%;
+        }
+
+        .footer-brand p {
+            color: #b598d9;
+            line-height: 1.6;
+        }
+
+        .footer-links h4 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary-light);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links ul a {
+            color: #b598d9;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links ul a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #b598d9;
+            font-size: 0.9rem;
+        }
+
+        /* Scroll Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 992px) {
+            .hero, .preview-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 50px;
+            }
+            .hero-content, .preview-text {
+                max-width: 100%;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .hero-img img {
+                width: 320px;
+                height: 320px;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .footer-brand h3 {
+                justify-content: center;
+            }
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOADING SCREEN -->
+    <div id="loader">
+        <img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" alt="Rimura Loading" id="loader-img">
+        <h2>Loading Rimura...</h2>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav>
+        <div class="logo-container">
+            <img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" alt="Rimura Logo">
+            Rimura
+        </div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <a href="#preview">Preview</a>
+            <a href="#" class="btn-nav">Invite Rimura</a>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="hero reveal" id="home">
+        <div class="hero-content">
+            <div class="tagline"><i class="fa-solid fa-star"></i> The #1 Discord Bot for Your Server</div>
+            <h1>Level up your community with <span>Rimura</span></h1>
+            <p>Why use five different bots when you can use just one? Rimura provides industry-leading moderation, seamless music streaming, advanced logging, and an interactive leveling system—all elegantly packed into one powerful bot.</p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-primary"><i class="fa-brands fa-discord"></i> Add to Server</a>
+                <a href="#" class="btn btn-secondary"><i class="fa-solid fa-compass"></i> Explore Commands</a>
+            </div>
+        </div>
+        <div class="hero-img">
+            <img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" alt="Rimura Bot">
+        </div>
+    </header>
+
+    <!-- LIVE STATS SECTION -->
+    <section class="stats reveal">
+        <div class="stat-item">
+            <h3>12K+</h3>
+            <p>Servers</p>
+        </div>
+        <div class="stat-item">
+            <h3>2.5M+</h3>
+            <p>Users</p>
+        </div>
+        <div class="stat-item">
+            <h3>99.9%</h3>
+            <p>Uptime</p>
+        </div>
+        <div class="stat-item">
+            <h3>0ms</h3>
+            <p>Lag / Delay</p>
+        </div>
+    </section>
+
+    <!-- DISCORD PREVIEW SECTION -->
+    <section class="preview-section reveal" id="preview">
+        <div class="discord-mockup">
+            <!-- User Message -->
+            <div class="discord-msg">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=313338&color=fff" alt="User">
+                <div class="discord-content">
+                    <span class="username">Admin <span class="time">Today at 2:45 PM</span></span>
+                    <p>/play url: lofi hip hop radio</p>
+                </div>
+            </div>
+            <!-- Bot Response -->
+            <div class="discord-msg">
+                <img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" alt="Rimura">
+                <div class="discord-content">
+                    <span class="username">Rimura <span class="bot-tag"><i class="fa-solid fa-check"></i> BOT</span> <span class="time">Today at 2:45 PM</span></span>
+                    <div class="discord-embed">
+                        <div class="embed-title">🎶 Now Playing</div>
+                        <div class="embed-desc">
+                            <strong>lofi hip hop radio - beats to relax/study to</strong><br>
+                            Requested by: @Admin<br>
+                            Duration: 🔴 LIVE
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="preview-text">
+            <h2>Sleek & Native Integration</h2>
+            <p>Rimura uses Discord's latest UI features like Slash Commands, Buttons, Dropdowns, and beautiful Embeds to provide your members with a native, seamless experience.</p>
+            <p>No more clunky text commands. Type <code>/</code> to explore everything Rimura can do!</p>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features reveal" id="features">
+        <h2 class="section-title">Everything You Need</h2>
+        <p class="section-subtitle">Discover the powerful features that make Rimura stand out from the rest.</p>
+        <div class="grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Auto-Moderation</h3>
+                <p>Advanced anti-spam, link filtering, and warning systems to keep your community safe 24/7 without lifting a finger.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-music"></i></div>
+                <h3>High-Res Music</h3>
+                <p>Crystal clear audio playback. Supports YouTube, Spotify, Soundcloud, custom playlists, and 24/7 voice channel stay.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-star"></i></div>
+                <h3>Leveling & XP</h3>
+                <p>Reward your most active members with XP. Automatically assign roles when users hit specific level milestones.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-ticket"></i></div>
+                <h3>Support Tickets</h3>
+                <p>Clean, organized ticket panels. Claim tickets, generate HTML transcripts, and provide top-tier support directly in Discord.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-face-smile"></i></div>
+                <h3>Reaction Roles</h3>
+                <p>Let users customize their own experience. Create drop-down menus and button panels for easy self-assignable roles.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-gift"></i></div>
+                <h3>Giveaways</h3>
+                <p>Host interactive giveaways with requirements (e.g., must have a specific role). Rimura automatically picks the winner fairly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-book-journal-whills"></i></div>
+                <h3>Server Logging</h3>
+                <p>Never miss an action. Track deleted messages, role changes, voice channel joins/leaves, and mod actions in a dedicated log channel.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-terminal"></i></div>
+                <h3>Custom Commands</h3>
+                <p>Create your own server-specific text commands or auto-responders to handle FAQs and inside jokes instantly.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section class="cta-section reveal">
+        <div class="cta-box">
+            <h2>Ready to transform your server?</h2>
+            <p>Join over 12,000 communities that trust Rimura to run their servers every single day.</p>
+            <a href="#" class="btn-white">Invite Rimura Now</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <h3><img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" alt="Rimura"> Rimura</h3>
+                <p>The ultimate, all-in-one Discord bot designed to make server management effortless and engaging for everyone.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Commands</a></li>
+                    <li><a href="#">Premium</a></li>
+                    <li><a href="#">Dashboard</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Support Server</a></li>
+                    <li><a href="#">API</a></li>
+                    <li><a href="#">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Refund Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Rimura Development. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // Loading Screen Logic
+        window.addEventListener('load', function() {
+            const loader = document.getElementById('loader');
+            // Adding a small delay to showcase the loading animation
+            setTimeout(() => {
+                loader.classList.add('loader-hidden');
+            }, 1200);
+        });
+
+        // Scroll Animation Logic
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100; // when to trigger the animation
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        
+        // Trigger on scroll and on load
+        window.addEventListener("scroll", reveal);
+        // Initial check right away just in case elements are already in view
+        setTimeout(reveal, 1300); 
+    </script>
+</body>
+</html>
