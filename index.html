@@ -96,6 +96,67 @@
         }
         .btn-outline:hover { background: var(--card); border-color: var(--border-glow); }
 
+        /* --- 3 DOTS MENU STYLING --- */
+        .kebab-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .kebab-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .kebab-btn:hover {
+            background: var(--card);
+            color: var(--text-main);
+            border-color: var(--border-glow);
+        }
+        .kebab-dropdown {
+            position: absolute;
+            top: 55px;
+            right: 0;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 8px;
+            min-width: 180px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+            z-index: 1001;
+        }
+        .kebab-dropdown.show {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+        .kebab-item {
+            padding: 12px 16px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .kebab-item:hover {
+            background: var(--border);
+            color: var(--text-main);
+        }
+
         /* =========================================
            HERO SECTION
            ========================================= */
@@ -373,454 +434,4 @@
             Rimura
         </a>
         <div class="nav-links">
-            <a onclick="navigate('home')">Commands</a>
-            <a onclick="navigate('home')">Embeds</a>
-            <a onclick="navigate('home')">Premium</a>
-            <a onclick="navigate('home')">Status</a>
-        </div>
-        <div class="nav-buttons">
-            <a href="#" class="btn btn-outline">Add to Discord</a>
-            <a onclick="navigate('login')" class="btn btn-white">Login</a>
-        </div>
-    </nav>
-
-    <!-- TOAST ALERT -->
-    <div id="toast">
-        <i class="fa-solid fa-circle-notch fa-spin"></i>
-        <span id="toast-msg">Connecting...</span>
-    </div>
-
-    <!-- ============================================== -->
-    <!-- VIEW: HOME PAGE -->
-    <!-- ============================================== -->
-    <main id="view-home" class="page-view active">
-        
-        <!-- HERO -->
-        <section class="hero">
-            <div class="badge"><i class="fa-solid fa-shield-check"></i> Trusted by 12,500+ communities</div>
-            <h1>Bring your community to life with Rimura</h1>
-            <p>The all-in-one Discord bot designed to supercharge your server. Advanced moderation, robust security, and engaging utility commands — all at your fingertips.</p>
-            <div class="hero-buttons">
-                <a href="#" class="btn btn-white">Add to Discord</a>
-                <a href="#" class="btn btn-outline">View Commands</a>
-            </div>
-        </section>
-
-        <!-- SERVER MARQUEE -->
-        <div class="marquee-container">
-            <!-- Duplicated content for infinite scroll effect -->
-            <div class="marquee-content">
-                <div class="server-pill"><div class="s-icon">L</div><span class="s-name">LUNIVARO XMAS</span><span class="s-count">22,335 members</span></div>
-                <div class="server-pill"><div class="s-icon">C</div><span class="s-name">Card Wars Kingdom</span><span class="s-count">18,992 members</span></div>
-                <div class="server-pill"><div class="s-icon">B</div><span class="s-name">BeyondTheBanters</span><span class="s-count">16,195 members</span></div>
-                <div class="server-pill"><div class="s-icon">E</div><span class="s-name">enanan nation</span><span class="s-count">11,667 members</span></div>
-                <div class="server-pill"><div class="s-icon">H</div><span class="s-name">HotCafe | $</span><span class="s-count">178,774 members</span></div>
-                <!-- Duplicate -->
-                <div class="server-pill"><div class="s-icon">L</div><span class="s-name">LUNIVARO XMAS</span><span class="s-count">22,335 members</span></div>
-                <div class="server-pill"><div class="s-icon">C</div><span class="s-name">Card Wars Kingdom</span><span class="s-count">18,992 members</span></div>
-                <div class="server-pill"><div class="s-icon">B</div><span class="s-name">BeyondTheBanters</span><span class="s-count">16,195 members</span></div>
-                <div class="server-pill"><div class="s-icon">E</div><span class="s-name">enanan nation</span><span class="s-count">11,667 members</span></div>
-                <div class="server-pill"><div class="s-icon">H</div><span class="s-name">HotCafe | $</span><span class="s-count">178,774 members</span></div>
-            </div>
-        </div>
-
-        <!-- WHY CHOOSE (BENTO GRID) -->
-        <section class="section">
-            <div class="section-header">
-                <h2>Why Choose Rimura?</h2>
-                <p>A powerful Discord bot that combines aesthetics with functionality, providing everything you need to create an engaging community.</p>
-            </div>
-            
-            <div class="bento-grid">
-                <!-- Music Card -->
-                <div class="bento-card music">
-                    <div>
-                        <h3>Music Player</h3>
-                        <p style="max-width: 250px;">High-quality music playback with advanced controls, queues, and voice features.</p>
-                    </div>
-                    <div class="music-mockup">
-                        <div class="m-art"></div>
-                        <div class="m-title">Back to Me</div>
-                        <div class="m-artist">The Marias</div>
-                        <div class="m-bar"><span></span></div>
-                        <div class="m-controls">
-                            <i class="fa-solid fa-backward-step"></i>
-                            <i class="fa-solid fa-pause"></i>
-                            <i class="fa-solid fa-forward-step"></i>
-                        </div>
-                    </div>
-                </div>
-                <!-- Small Cards -->
-                <div class="bento-card mod">
-                    <i class="fa-solid fa-shield-halved" style="font-size: 2rem; color: var(--primary); margin-bottom: 16px;"></i>
-                    <h3>Advanced Moderation</h3>
-                    <p>Keep your server safe with powerful moderation tools, auto-mod, and raid protection.</p>
-                </div>
-                <div class="bento-card level">
-                    <i class="fa-solid fa-star" style="font-size: 2rem; color: var(--primary); margin-bottom: 16px;"></i>
-                    <h3>Level System</h3>
-                    <p>Reward active members with custom roles and perks. Members earn XP through chat activity.</p>
-                </div>
-                <div class="bento-card analytics">
-                    <i class="fa-solid fa-chart-line" style="font-size: 2rem; color: var(--primary); margin-bottom: 16px;"></i>
-                    <h3>Server Analytics</h3>
-                    <p>Track your server's growth and engagement. Monitor member activity over time.</p>
-                </div>
-                <div class="bento-card hub">
-                    <i class="fa-solid fa-users" style="font-size: 2rem; color: var(--primary); margin-bottom: 16px;"></i>
-                    <h3>Community Hub</h3>
-                    <p>Create a welcoming space with custom welcome messages and role assignment.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- POWERFUL FEATURES -->
-        <section class="section">
-            <div class="section-header">
-                <h2>Powerful Features, Simple Interface</h2>
-                <p>Every feature is designed to be powerful yet intuitive, helping you manage your community with ease.</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-item">
-                    <i class="fa-solid fa-coins"></i>
-                    <h3>Economy System</h3>
-                    <p>Advanced economy with custom shops, trading, gambling, and item management.</p>
-                    <div class="feature-sub">
-                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Custom Currency</span></div>
-                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Real-time Trading</span></div>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <i class="fa-solid fa-bolt"></i>
-                    <h3>XP & Leveling</h3>
-                    <p>Dynamic level system with custom rewards, roles, and progression paths.</p>
-                    <div class="feature-sub">
-                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Auto Roles</span></div>
-                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Custom XP Rules</span></div>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <i class="fa-solid fa-music"></i>
-                    <h3>Music & Voice</h3>
-                    <p>High-quality music playback with advanced controls and voice features.</p>
-                    <div class="feature-sub">
-                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Multiple Sources</span></div>
-                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Audio Effects</span></div>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <i class="fa-solid fa-gavel"></i>
-                    <h3>Advanced Moderation</h3>
-                    <p>Comprehensive moderation tools with auto-mod, raid protection, and filters.</p>
-                    <div class="feature-sub">
-                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Anti-Raid</span></div>
-                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Auto-Mod</span></div>
-                    </div>
-                </div>
-                <div class="feature-item">
-                    <i class="fa-solid fa-chart-pie"></i>
-                    <h3>Logs & Analytics</h3>
-                    <p>Detailed server activity tracking and analytics dashboard.</p>
-                    <div class="feature-sub">
-                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Activity Insights</span></div>
-                        <div class="f-sub-item"><i class="fa-solid fa-check"></i> <span>Growth Metrics</span></div>
-                    </div>
-                </div>
-                <!-- Empty div to balance grid -->
-                <div class="feature-item" style="border: none; background: transparent;"></div>
-            </div>
-        </section>
-
-        <!-- STANDARDS METRICS -->
-        <section class="section">
-            <div class="section-header">
-                <h2>Setting New Standards</h2>
-                <p>Experience industry-leading performance and reliability that sets us apart from the competition.</p>
-            </div>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <h3>19ms</h3>
-                    <h4>Fastest Response</h4>
-                    <p>While others take 200ms+, we deliver at lightning speed.</p>
-                </div>
-                <div class="metric-card">
-                    <h3>99.9%</h3>
-                    <h4>Highest Uptime</h4>
-                    <p>Enterprise-grade reliability you can count on.</p>
-                </div>
-                <div class="metric-card">
-                    <h3>98.9K+</h3>
-                    <h4>Daily Commands</h4>
-                    <p>Trusted by millions for reliable performance.</p>
-                </div>
-                <div class="metric-card">
-                    <h3>100%</h3>
-                    <h4>Security Coverage</h4>
-                    <p>Complete protection with anti-raid and spam detection.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- LOGS MOCKUP -->
-        <section class="section">
-            <div class="logs-container">
-                <div class="logs-text">
-                    <h2>Advanced Server Intelligence</h2>
-                    <p>Comprehensive monitoring and logging system that keeps you in control of every aspect of your community. Track member activity, server changes, and moderation actions in real-time.</p>
-                </div>
-                <div class="discord-mockup">
-                    <div class="d-msg">
-                        <img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" class="d-avatar">
-                        <div>
-                            <div class="d-header">
-                                <span class="d-name">Rimura</span><span class="d-bot">BOT</span><span class="d-time">Today at 8:36 PM</span>
-                            </div>
-                            <div class="d-embed">
-                                <div class="d-embed-title red"><i class="fa-solid fa-arrow-right-from-bracket"></i> Member Left</div>
-                                <div class="d-embed-desc">
-                                    <strong>Joined Server</strong><br>
-                                    Tuesday, 6 May 2025 7:02 AM (2 months ago)<br>
-                                    Member ID: 414983717517981876
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="d-msg">
-                        <img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" class="d-avatar">
-                        <div>
-                            <div class="d-header">
-                                <span class="d-name">Rimura</span><span class="d-bot">BOT</span><span class="d-time">Today at 8:41 PM</span>
-                            </div>
-                            <div class="d-embed">
-                                <div class="d-embed-title green"><i class="fa-solid fa-arrow-right-to-bracket"></i> Member Joined</div>
-                                <div class="d-embed-desc">
-                                    <strong>Account Created</strong><br>
-                                    Tuesday, 21 January 2020 4:40 AM (5 years ago)<br>
-                                    Member ID: 668781824829165574
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- REVIEWS -->
-        <section class="section">
-            <div class="section-header">
-                <h2>Trusted by Thousands of Communities</h2>
-                <p>Join the growing community of server owners who trust Rimura to manage and protect their Discord servers.</p>
-            </div>
-            
-            <div class="reviews-grid">
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="review-avatar">S</div>
-                        <div>
-                            <div class="review-name">Sam</div>
-                            <div class="review-role">Server Owner</div>
-                        </div>
-                    </div>
-                    <div class="review-text">"Rimura is truly unlike any other bot. With Rimura my life has become so much easier without a constant hassle of dealing with manual moderation, and removed the constant worry of betrayal with their antinuke system; moreover everything is packed in nicely with their modern dashboard. This bot is the future."</div>
-                </div>
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="review-avatar">N</div>
-                        <div>
-                            <div class="review-name">nxyy</div>
-                            <div class="review-role">Community Manager</div>
-                        </div>
-                    </div>
-                    <div class="review-text">"We tried several premium bots before finding Rimura. Nothing else comes close to the feature set and reliability."</div>
-                </div>
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="review-avatar">E</div>
-                        <div>
-                            <div class="review-name">endure</div>
-                            <div class="review-role">Server Owner • 25k members</div>
-                        </div>
-                    </div>
-                    <div class="review-text">"Rimura has been a game changer for our server. The automation features and moderation tools have made managing our community so much easier. The premium features are worth every penny."</div>
-                </div>
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="review-avatar">K</div>
-                        <div>
-                            <div class="review-name">kei</div>
-                            <div class="review-role">Server Owner</div>
-                        </div>
-                    </div>
-                    <div class="review-text">"I have had many many experiences with other discord bots, however none of them come close to the experience I've had with Rimura. It is an elite, easy to use, and aesthetic discord bot."</div>
-                </div>
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="review-avatar">N</div>
-                        <div>
-                            <div class="review-name">novelkars</div>
-                            <div class="review-role">Server Admin</div>
-                        </div>
-                    </div>
-                    <div class="review-text">"I've recommended Rimura to everyone I know. The premium features are absolutely worth it."</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- STATS BANNER -->
-        <div class="stats-banner">
-            <div class="stat-item">
-                <h3>7,698</h3>
-                <p>Active Servers</p>
-            </div>
-            <div class="stat-item">
-                <h3>3.2M+</h3>
-                <p>Total Users</p>
-            </div>
-            <div class="stat-item">
-                <h3>1.2M+</h3>
-                <p>Daily Commands</p>
-            </div>
-        </div>
-
-        <!-- BOTTOM CTA -->
-        <section class="cta-section">
-            <h2>Ready to Transform Your Server?</h2>
-            <p>Join thousands of servers already using Rimura to create engaging, well-managed communities. Get started in seconds.</p>
-            <div class="hero-buttons">
-                <a href="#" class="btn btn-white">Add to Discord</a>
-                <a href="#" class="btn btn-outline">View Commands</a>
-            </div>
-        </section>
-    </main>
-
-    <!-- ============================================== -->
-    <!-- VIEW: DISCORD LOGIN -->
-    <!-- ============================================== -->
-    <main id="view-login" class="page-view">
-        <div class="auth-wrapper">
-            <div class="auth-card">
-                <img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" alt="Rimura Logo">
-                <h2>Welcome Back</h2>
-                <p>Log in with your Discord account to access the dashboard, manage your servers, and configure modules.</p>
-                
-                <!-- Discord OAuth Button -->
-                <button id="discord-login-btn" class="btn-discord">
-                    <i class="fa-brands fa-discord"></i> Login with Discord
-                </button>
-                
-                <p style="margin-top: 24px; font-size: 0.85rem; opacity: 0.6;">
-                    By logging in, you agree to our Terms of Service and Privacy Policy.
-                </p>
-            </div>
-        </div>
-    </main>
-
-    <!-- ============================================== -->
-    <!-- FOOTER -->
-    <!-- ============================================== -->
-    <footer>
-        <div class="footer-grid">
-            <div class="f-brand">
-                <h3><img src="https://kommodo.ai/i/Ew3iFQhFMb51V3yeOMmw" alt="Rimura"> Rimura</h3>
-                <p>The ultimate Discord bot for moderation, security, and utility. Powering thousands of communities.</p>
-            </div>
-            <div class="f-links">
-                <h4>Product</h4>
-                <ul>
-                    <li><a onclick="navigate('home')">Commands</a></li>
-                    <li><a onclick="navigate('home')">Premium</a></li>
-                    <li><a onclick="navigate('home')">Embed Builder</a></li>
-                    <li><a onclick="navigate('home')">Status</a></li>
-                </ul>
-            </div>
-            <div class="f-links">
-                <h4>Resources</h4>
-                <ul>
-                    <li><a href="#">Documentation</a></li>
-                    <li><a href="#">Add to Discord</a></li>
-                    <li><a href="#">Support Server</a></li>
-                </ul>
-            </div>
-            <div class="f-links">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 Rimura. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <!-- ============================================== -->
-    <!-- JAVASCRIPT LOGIC -->
-    <!-- ============================================== -->
-    <script>
-        // --- 1. SPA ROUTING LOGIC ---
-        function navigate(viewId) {
-            // Update URL Hash without jumping instantly
-            window.history.pushState(null, null, '#' + viewId);
-            
-            // Hide all pages
-            document.querySelectorAll('.page-view').forEach(page => {
-                page.classList.remove('active');
-            });
-
-            // Show target page
-            const targetPage = document.getElementById('view-' + viewId);
-            if (targetPage) {
-                targetPage.classList.add('active');
-            } else {
-                document.getElementById('view-home').classList.add('active');
-            }
-
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Handle browser back/forward buttons
-        window.addEventListener('popstate', () => {
-            let hash = window.location.hash.substring(1) || 'home';
-            navigate(hash);
-        });
-
-        // Initialize view on load
-        window.addEventListener('load', () => {
-            let hash = window.location.hash.substring(1) || 'home';
-            navigate(hash);
-        });
-
-        // --- 2. TOAST NOTIFICATION LOGIC ---
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            const msg = document.getElementById('toast-msg');
-            msg.innerText = message;
-            toast.classList.add('show');
-            setTimeout(() => { toast.classList.remove('show'); }, 3000);
-        }
-
-        // --- 3. DISCORD OAUTH LOGIC ---
-        // REPLACE "YOUR_CLIENT_ID_HERE" with your actual Application Client ID from the Discord Developer Portal
-        const DISCORD_CLIENT_ID = "YOUR_CLIENT_ID_HERE"; 
-        
-        // This will automatically grab whatever domain you are hosting this website on
-        const REDIRECT_URI = encodeURIComponent(window.location.origin + window.location.pathname); 
-        
-        const DISCORD_LOGIN_URL = `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=token&scope=identify%20guilds`;
-
-        document.getElementById('discord-login-btn').addEventListener('click', () => {
-            if (DISCORD_CLIENT_ID === "YOUR_CLIENT_ID_HERE") {
-                showToast("Error: Discord Client ID is not configured in the code.");
-            } else {
-                showToast("Redirecting to Discord Secure Login...");
-                setTimeout(() => {
-                    window.location.href = DISCORD_LOGIN_URL;
-                }, 800);
-            }
-        });
-    </script>
-</body>
-</html>
+   
